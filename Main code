@@ -1,0 +1,20 @@
+import json
+from datetime import datetime
+
+def display_menu():
+    print("Mood Tracker")
+    print("1. Happy")
+    print("2. Sad")
+    print("3. Angry")
+    print("4. Excited")
+    print("5. Calm")
+    print("6. No feelings today")
+    
+
+def save_mood(library, mood):
+    current_time = datetime.now().strftime("%Y-%m-%d")
+    entry = {'mood': mood, 'date': current_time}
+    library.append(entry)
+    
+    with open('mood_library.json', 'w') as file:
+        json.dump(library, file)
