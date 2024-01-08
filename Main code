@@ -7,8 +7,9 @@ def display_menu():
     print("2. Sad")
     print("3. Angry")
     print("4. Excited")
-    print("5. Calm")
-    print("6. No feelings today")
+    print("5. View Mood History")
+    print("6. Count Occurrences")
+    print("7. Quit")
     
 
 def save_mood(library, mood):
@@ -18,3 +19,51 @@ def save_mood(library, mood):
     
     with open('mood_library.json', 'w') as file:
         json.dump(library, file)
+
+def display_mood_history(library):
+    print("Mood History:")
+    for entry in library:
+        print(f"Mood: {entry['mood']}, Date: {entry['date']}")
+    return True
+
+def count_occurrences(library, mood):
+    occurrences = sum(entry['mood'] == mood for entry in library)
+    print(f"The mood '{mood}' has been entered {occurrences} times.")
+
+def main():
+    mood_library = []
+    mood_history_displayed = False
+
+    try:
+        with open('mood_library.json', 'r') as file:
+            mood_library = json.load(file)
+    except FileNotFoundError:
+        pass
+
+    while True:
+        display_menu()
+        choice = input("Choose an option (1-7): ")
+
+        if choice.isdigit() and 1 <= int(choice) <= 7:
+   
+        if choice == '7':
+            print("Exiting Mood Tracker.")
+            break
+        elif choice == '5':
+            mood_history_displayed = display_mood_history(mood_library)
+        elif choice == '6' and mood_history_displayed:
+            mood_to_count = input("Enter the mood to count occurrences: ")
+            count_occurrences(mood_library, mood_to_count)
+        elif choice in {'1', '2', '3', '4'}:
+            moods = ['Happy', 'Sad', 'Angry', 'Excited']
+            selected_mood = moods[int(choice) - 1]
+            save_mood(mood_library, selected_mood)
+            print(f"Mood '{selected_mood}' saved to library on {datetime.now().strftime('%Y-%m-%d')}.")
+       
+        else:
+            print("Invalid choice. Please enter a number between 1 and 7.")
+
+if __name__ == "__main__":
+    main()
+
+
